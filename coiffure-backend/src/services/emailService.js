@@ -1,10 +1,13 @@
-const transporter = require('../config/mailer');
+const resend = require('../config/mailer');
 
 const FROM = process.env.EMAIL_FROM || 'Salon Coiffure <no-reply@salon.com>';
 
 async function sendMail({ to, subject, html }) {
   try {
-    await transporter.sendMail({ from: FROM, to, subject, html });
+    const { error } = await resend.emails.send({ from: FROM, to, subject, html });
+    if (error) {
+      console.error('[mailer] échec envoi e-mail:', error.message);
+    }
   } catch (err) {
     // On ne bloque jamais le flux métier si l'e-mail échoue : on logge seulement.
     console.error('[mailer] échec envoi e-mail:', err.message);
