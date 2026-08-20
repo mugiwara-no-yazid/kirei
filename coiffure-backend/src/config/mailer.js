@@ -1,9 +1,9 @@
-const { Resend } = require('resend');
+const sgMail = require('@sendgrid/mail');
 
-if (!process.env.RESEND_API_KEY) {
-  console.warn('[mailer] RESEND_API_KEY manquant — les e-mails ne partiront pas.');
+if (!process.env.SENDGRID_API_KEY) {
+  console.warn('[mailer] SENDGRID_API_KEY manquant — les e-mails ne partiront pas.');
+} else {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-module.exports = resend;
+module.exports = sgMail;

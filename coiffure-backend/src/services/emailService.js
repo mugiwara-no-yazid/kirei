@@ -1,16 +1,12 @@
-const resend = require('../config/mailer');
+const sgMail = require('../config/mailer');
 
-const FROM = process.env.EMAIL_FROM || 'Salon Coiffure <no-reply@salon.com>';
+const FROM = process.env.EMAIL_FROM || 'tonsalon@gmail.com'; // doit être l'adresse vérifiée sur SendGrid
 
 async function sendMail({ to, subject, html }) {
   try {
-    const { error } = await resend.emails.send({ from: FROM, to, subject, html });
-    if (error) {
-      console.error('[mailer] échec envoi e-mail:', error.message);
-    }
+    await sgMail.send({ from: FROM, to, subject, html });
   } catch (err) {
-    // On ne bloque jamais le flux métier si l'e-mail échoue : on logge seulement.
-    console.error('[mailer] échec envoi e-mail:', err.message);
+    console.error('[mailer] échec envoi e-mail:', err.response?.body || err.message);
   }
 }
 
